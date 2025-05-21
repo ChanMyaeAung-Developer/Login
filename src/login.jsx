@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
-// import Rlogo from './Rlogo.png';
-// import Logo from './logo.png';
 import { useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,7 +9,9 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
+
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async (data) => {
@@ -23,7 +23,7 @@ const Login = () => {
       if (users.length > 0) {
         toast.success("✅ Login successful!", { position: "top-center" });
         localStorage.setItem('user', data.email);
-        setTimeout(() => navigate("/Dashboard"), 1000);
+        setTimeout(() => navigate("/Home",{replace:true}), 1000);
       } else {
         toast.error("❌ Invalid email or password", { position: "top-center" });
       }
@@ -35,13 +35,9 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex  bg-blue-50 ">
-      
-  
-   
-
-      {/* Left Column: Login Form */}
-      <div className="w-full w-1/2  flex items-center justify-center">
-        <div className="w-full max-w-md p-6 rounded-2xl shadow-lg bg-white">
+      {/* Left Column: Login Form  */}
+      <div className="w-full flex items-center justify-center">
+        <div className="w-full max-w-md p-5 rounded-2xl shadow-md bg-white">
           <div className="text-center mb-6">
            <div className="flex justify-center mb-4">
              <img
@@ -61,7 +57,7 @@ const Login = () => {
                 <input
                   type="text"
                   placeholder="Email"
-                  className="w-full border border-gray-300 pl-10 px-4 py-3 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full border border-gray-300 pl-10 px-4 py-3 rounded-lg outline-none focus:border-blue-900 "
                   {...register("email", {
                     required: "Email is required",
                     pattern: {
@@ -85,7 +81,7 @@ const Login = () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
-                  className="w-full border border-gray-300 pl-10 px-4 py-3 rounded-lg outline-none focus:border-blue-500"
+                  className="w-full border border-gray-300 pl-10 px-4 py-3 rounded-lg outline-none focus:border-blue-900"
                   {...register("password", {
                     required: "Password is required",
                     minLength: {
@@ -109,9 +105,9 @@ const Login = () => {
             </div>
 
             {/* Submit Button */}
-            <button
+            <button 
               type="submit"
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-semibold transition"
+              className="w-full cursor-pointer bg-blue-900 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
             >
               Login
             </button>
@@ -120,12 +116,12 @@ const Login = () => {
           <ToastContainer position="top-center" autoClose={3000} />
         </div>
       </div>
- {/* Left Column: Login Form */}
-         <div className="md:w-1/2 hidden md:flex items-center justify-center ">
+ {/* Right Column: Login Form Photo */}
+         <div className="md:w-1/2 hidden md:flex items-center justify-center">
         <img
           src="/Rlogo.png"
           alt="Login Visual"
-          className="w-4/4 h-auto object-contain"
+          className="w-4/4 h-auto object-contain mr-5"
         />
       </div>
     </div>
