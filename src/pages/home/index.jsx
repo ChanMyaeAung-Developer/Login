@@ -1,6 +1,7 @@
-
-import Sidebar from "./components/Sidebar.jsx";
+import Sidebar from "../../components/Sidebar.jsx";
 import { useState } from "react";
+import useAuth from "../../utils/hooks/useAuth.js";
+import { Navigate } from "react-router";
 const Home = () => {
 
   const [collapsed, setCollapsed] = useState(false);
@@ -8,10 +9,14 @@ const Home = () => {
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
   };
-
+  const {status} = useAuth();
+ 
+  if(status === 'unauthenticated'){
+	return <Navigate to="/login" replace/>
+}
  return (
-   <div className="flex">
-      <Sidebar collapsed={collapsed} toggleSidebar={toggleSidebar}/>
+  //  <div className="flex">
+  //     <Sidebar collapsed={collapsed} toggleSidebar={toggleSidebar}/>
       <div className="flex-1 bg-white min-h-screen">
         
   <section class="relative w-full h-screen flex items-center justify-between px-[100px]  overflow-hidden">
@@ -36,7 +41,7 @@ const Home = () => {
   </section>
       </div>
     
-    </div>
+    // </div>
     
   );
 };

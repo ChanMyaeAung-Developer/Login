@@ -8,9 +8,38 @@ import {
   getFilteredRowModel,
 } from "@tanstack/react-table";
 import MOCK_DATA from "./MOCK_DATA.json";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { axiosPrivate } from "../../api/axiosPrivate";
 
 const List_2 = () => {
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const getData = async () => {
+
+      await axiosPrivate
+        ("https://backend-test-gilt-eta.vercel.app/api/users", {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        })
+        .then((res) => {
+          console.log('get data', res)
+
+        })
+        .catch((err) => {
+          console.log("fetch error => ", err);
+          toast.error(
+            err?.response?.data?.message ||
+            `Error with status ${err?.response?.status}`
+          );
+        })
+        .finally(() => setIsLoading(false));
+    }
+
+    getData()
+  }, [])
+
   const [sorting, setSorting] = useState([]);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -21,27 +50,27 @@ const List_2 = () => {
 
   const GroupColumns = [
     { header: 'ID', accessorKey: 'id', footer: 'ID' },
-   
-        {
-          header: 'First-Name',
-          accessorKey: 'first_name',
-          footer: 'First Name',
-        },
-        {
-          header: 'Last Name',
-          accessorKey: 'last_name',
-          footer: 'Last Name',
-        },
-      
-    
-    
-        { header: 'Email', accessorKey: 'email', footer: 'Email' },
-        { header: 'Gender', accessorKey: 'gender', footer: 'Gender' },
-        { header: 'Age', accessorKey: 'age', footer: 'Age' },
-        { header: 'Country', accessorKey: 'country', footer: 'Country' },
-        { header: 'Phone', accessorKey: 'phone', footer: 'Phone' },
-        { header: 'Date of Birth', accessorKey: 'date_of_birth', footer: 'Date Of Birth' },
-  
+
+    {
+      header: 'First-Name',
+      accessorKey: 'first_name',
+      footer: 'First Name',
+    },
+    {
+      header: 'Last Name',
+      accessorKey: 'last_name',
+      footer: 'Last Name',
+    },
+
+
+
+    { header: 'Email', accessorKey: 'email', footer: 'Email' },
+    { header: 'Gender', accessorKey: 'gender', footer: 'Gender' },
+    { header: 'Age', accessorKey: 'age', footer: 'Age' },
+    { header: 'Country', accessorKey: 'country', footer: 'Country' },
+    { header: 'Phone', accessorKey: 'phone', footer: 'Phone' },
+    { header: 'Date of Birth', accessorKey: 'date_of_birth', footer: 'Date Of Birth' },
+
   ];
 
   const columns = useMemo(() => GroupColumns, []);
@@ -78,7 +107,7 @@ const List_2 = () => {
           placeholder="Search..."
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
-        className="px-3 py-2 border-blue-300 rounded bg-blue-200"
+          className="px-3 py-2 border-blue-300 rounded bg-blue-200"
 
         />
       </div>

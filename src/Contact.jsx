@@ -56,17 +56,23 @@ import { useState } from "react";
 import Sidebar from "./components/Sidebar.jsx";
 import {FaHome,FaPhoneSquareAlt} from "react-icons/fa";
 import { MdMarkEmailRead } from "react-icons/md";
+import useAuth from "./utils/hooks/useAuth.js";
+import { Navigate } from "react-router";
 const Contact = () => {
   const [collapsed, setCollapsed] = useState(false);
  
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
   };
-
+  const {status} = useAuth();
+ 
+  if(status === 'unauthenticated'){
+	return <Navigate to="/login" replace/>
+}
   return (
     <div className="relative">
-    <div className="flex ">
-      <Sidebar collapsed={collapsed} toggleSidebar={toggleSidebar} />
+    {/* <div className="flex ">
+      <Sidebar collapsed={collapsed} toggleSidebar={toggleSidebar} /> */}
    <div className="flex-1 grid grid-rows-2 h-screen pl-0.5 ">
   <div className="bg-blue-900 text-white flex items-center  justify-around">
 
@@ -211,7 +217,7 @@ const Contact = () => {
   </div>
 </div>
 </div>
-    </div>
+    // </div>
   );
 };
 

@@ -3,34 +3,72 @@ import { FaUser } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { useForm } from 'react-hook-form';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
+import axios from "axios";
+import setTokenInCookie from "../../utils/helpers/setTokenInCookie";
 
+const emailRegex = new RegExp(
+  /^\S+@\S+$/i
+)
+const formSchema = z.object({
+  password: z.string().min(1, {
+    message: "Password is required",
+  }),
+  email: z.string().min(1, {
+    message: "Email is required.",
+  }).regex(emailRegex, 'Invlaid email'),
+
+
+});
 const Login = () => {
   const navigate = useNavigate();
-
   const [showPassword, setShowPassword] = useState(false);
-
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [isLoading, setIsLoading] = useState(false)
+  const { register, handleSubmit, formState: { errors } } = useForm(
+    {
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        password: '',
+        email: ''
+      },
+    }
+  );
 
   const onSubmit = async (data) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3001/users?email=${data.email}&password=${data.password}`
-      );
-      const users = await response.json();
-      if (users.length > 0) {
-        toast.success("✅ Login successful!", { position: "top-center" });
-        localStorage.setItem('user', data.email);
-        setTimeout(() => navigate("/Home",{replace:true}), 1000);
-      } else {
-        toast.error("❌ Invalid email or password", { position: "top-center" });
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      toast.error("⚠️ Something went wrong!", { position: "top-center" });
-    }
+  
+    setIsLoading(true);
+    await axios
+      .post("https://backend-test-gilt-eta.vercel.app/api/users/login", data, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      })
+      //  .post("http://localhost:3000/api/users/login", data, {
+      //   headers: { "Content-Type": "application/json" },
+      //   withCredentials: true,
+      // })
+      .then((res) => {
+       
+        const accessToken = res?.data?.accessToken;
+
+        setTokenInCookie("accessToken", accessToken);
+
+
+        navigate("/", { replace: true });
+      })
+      .catch((err) => {
+        console.log("login error => ", err);
+        toast.error(
+          err?.response?.data?.message ||
+          `Error with status ${err?.response?.status}`
+        );
+      })
+      .finally(() => setIsLoading(false));
+
+
   };
 
   return (
@@ -39,16 +77,18 @@ const Login = () => {
       <div className="w-full flex items-center justify-center">
         <div className="w-full max-w-md p-5 rounded-2xl shadow-md bg-white">
           <div className="text-center mb-6">
-           <div className="flex justify-center mb-4">
-             <img
-            src="/logo.png"
-            alt="Logo"
-            className="w-32 h-32 rounded-full object-cover"
-          />
-          </div>
+            <div className="flex justify-center mb-4">
+              <img
+                src="/logo.png"
+                alt="Logo"
+                className="w-32 h-32 rounded-full object-cover"
+              />
+            </div>
           </div>
 
-          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit, (formErrors) => {
+            console.error('Validation Errors:', formErrors);
+          })}>
 
             {/* Email Field */}
             <div className="w-full">
@@ -58,13 +98,7 @@ const Login = () => {
                   type="text"
                   placeholder="Email"
                   className="w-full border border-gray-300 pl-10 px-4 py-3 rounded-lg outline-none focus:border-blue-900 "
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /^\S+@\S+$/i,
-                      message: "Invalid email format"
-                    }
-                  })}
+                  {...register("email")}
                 />
               </div>
               {errors.email && (
@@ -82,13 +116,7 @@ const Login = () => {
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   className="w-full border border-gray-300 pl-10 px-4 py-3 rounded-lg outline-none focus:border-blue-900"
-                  {...register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters"
-                    }
-                  })}
+                  {...register("password")}
                 />
                 <span
                   onClick={() => setShowPassword(!showPassword)}
@@ -105,19 +133,20 @@ const Login = () => {
             </div>
 
             {/* Submit Button */}
-            <button 
+            <button
               type="submit"
               className="w-full cursor-pointer bg-blue-900 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
+              disabled={isLoading}
             >
-              Login
+              {isLoading ? "Wait..." : "Log In"}
             </button>
           </form>
 
           <ToastContainer position="top-center" autoClose={3000} />
         </div>
       </div>
- {/* Right Column: Login Form Photo */}
-         <div className="md:w-1/2 hidden md:flex items-center justify-center">
+      {/* Right Column: Login Form Photo */}
+      <div className="md:w-1/2 hidden md:flex items-center justify-center">
         <img
           src="/Rlogo.png"
           alt="Login Visual"
