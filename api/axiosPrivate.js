@@ -9,6 +9,7 @@ export const axiosPrivate = axios.create({
 	headers: {
 		'Content-Type': 'application/json',
 	},
+
 	withCredentials: true,
 });
 
@@ -24,11 +25,13 @@ axiosPrivate.interceptors.request.use(
 				withCredentials: true,
 			})
 				.then((response) => {
+				
 					const newaccessToken = response?.data?.accessToken;
 					setTokenInCookie('accessToken', newaccessToken);
 					config.headers.Authorization = newaccessToken;
+					
 				})
-				.catch((error) => {
+				.catch(() => {
 					window.location.replace('/login');
 				});
 		} else {

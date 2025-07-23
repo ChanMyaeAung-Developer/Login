@@ -46,15 +46,18 @@ const Login = () => {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       })
+    
       //  .post("http://localhost:3000/api/users/login", data, {
       //   headers: { "Content-Type": "application/json" },
       //   withCredentials: true,
       // })
       .then((res) => {
-       
+        console.log(res);
+        
         const accessToken = res?.data?.accessToken;
 
         setTokenInCookie("accessToken", accessToken);
+      
 
 
         navigate("/", { replace: true });
@@ -154,6 +157,7 @@ const Login = () => {
         />
       </div>
     </div>
+    
   );
 };
 

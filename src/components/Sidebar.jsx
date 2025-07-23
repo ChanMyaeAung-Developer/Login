@@ -5,10 +5,11 @@ import { RiContactsBook3Line } from "react-icons/ri";
 import { useNavigate } from "react-router";
 import { axiosPrivate } from "../../api/axiosPrivate";
 import Cookies from 'universal-cookie';
+import useAuth from "../utils/hooks/useAuth";
 const Sidebar = ({ collapsed, toggleSidebar }) => {
-
+const { data } = useAuth();
   const cookie = new Cookies();
-  const userEmail = localStorage.getItem("user");
+ 
 
   const menuItems = [
     {
@@ -36,7 +37,7 @@ const Sidebar = ({ collapsed, toggleSidebar }) => {
   const logout = async () => {
     await axiosPrivate
       .post("https://backend-test-gilt-eta.vercel.app/api/users/logout")
-      .then((res) => {
+      .then(() => {
         cookie.remove("accessToken");
         navigate("/login");
       })
@@ -92,7 +93,7 @@ const Sidebar = ({ collapsed, toggleSidebar }) => {
                text-white hover:text-yellow-200 hover:bg-white/10"
         >
           <FaUser />
-          {!collapsed && <span>{userEmail}</span>}
+           {!collapsed && <span>{data?.name || "User"}</span>}
         </div>
 
         {/* Logout Button */}
