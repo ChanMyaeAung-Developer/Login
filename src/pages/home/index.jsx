@@ -1,7 +1,7 @@
 import Sidebar from "../../components/Sidebar.jsx";
 import { useState } from "react";
 import useAuth from "../../utils/hooks/useAuth.js";
-import { Navigate } from "react-router";
+import { Navigate } from "react-router-dom";
 const Home = () => {
 
   const [collapsed, setCollapsed] = useState(false);

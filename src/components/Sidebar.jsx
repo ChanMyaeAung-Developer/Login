@@ -1,8 +1,9 @@
 
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom";
+
 import { FaList, FaHome, FaUser, FaBars, FaTimes, FaSignOutAlt } from "react-icons/fa";
 import { RiContactsBook3Line } from "react-icons/ri";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { axiosPrivate } from "../../api/axiosPrivate";
 import Cookies from 'universal-cookie';
 import useAuth from "../utils/hooks/useAuth";

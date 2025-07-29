@@ -57,7 +57,7 @@ import Sidebar from "./components/Sidebar.jsx";
 import {FaHome,FaPhoneSquareAlt} from "react-icons/fa";
 import { MdMarkEmailRead } from "react-icons/md";
 import useAuth from "./utils/hooks/useAuth.js";
-import { Navigate } from "react-router";
+import { Navigate } from "react-router-dom";
 const Contact = () => {
   const [collapsed, setCollapsed] = useState(false);
  

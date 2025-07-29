@@ -12,7 +12,7 @@ function ExpandableComponent({ rowData, hiddenColumns, columnMeta }) {
               className="bg-white h-16 flex flex-1 gap-2 py-1"
             >
               <div className="ml-2 border customized-rounded w-full basis-1/3 flex items-center justify-center">
-                <h3 className="text-center font-bold text-[#231F2080]">
+                <h3 className="text-center font-bold  text-green-700">
                   {colMeta.header}
                 </h3>
               </div>

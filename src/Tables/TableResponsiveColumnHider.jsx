@@ -3,8 +3,8 @@ import { useLayoutEffect } from "react";
 const TableResponsiveColumnHider = ({
   dataColumns,
   setColumnVisibility,
-  tableId = "react-table", // Default ID, but can be customized
-  expanderColumnWidth = 50, // Width for the expander column
+  tableId = "react-table", 
+  expanderColumnWidth = 50, 
 }) => {
   useLayoutEffect(() => {
     const handleResize = () => {
@@ -37,12 +37,12 @@ const TableResponsiveColumnHider = ({
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // Call on initial render
+    handleResize();
 
     return () => window.removeEventListener("resize", handleResize);
   }, [dataColumns, setColumnVisibility, tableId, expanderColumnWidth]); 
 
-  // This component doesn't render anything visually
+ 
   return null;
 };
 

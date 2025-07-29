@@ -1,7 +1,7 @@
-import React, { useState, useMemo, useRef, forwardRef, useImperativeHandle } from 'react'; // forwardRef နဲ့ useImperativeHandle ထပ်ထည့်ပါ
+import React, { useState, useMemo, useRef, forwardRef, useImperativeHandle } from 'react'; // forwardRef နဲ့ 
 import { FaFilter, FaTimes } from 'react-icons/fa';
 
-// forwardRef ကို သုံးပြီး ref ကို လက်ခံပါ
+
 const TableFilterControls = forwardRef(({ dataColumns, onFilterChange }, ref) => {
     const [showFilterDropdown, setShowFilterDropdown] = useState(false);
     const [filters, setFilters] = useState({});
@@ -11,17 +11,17 @@ const TableFilterControls = forwardRef(({ dataColumns, onFilterChange }, ref) =>
         return dataColumns.filter(column => column.filter && column.options && column.options.length > 0);
     }, [dataColumns]);
 
-    // Parent component ကနေ ခေါ်ယူနိုင်မယ့် functions တွေကို expose လုပ်ဖို့
+ 
     useImperativeHandle(ref, () => ({
         clearFilters: () => {
-            // Column filters တွေကို clear လုပ်ဖို့ logic
+           
             const cleared = {};
             filterableColumns.forEach(col => {
                 cleared[col.accessorKey] = '';
             });
-            setFilters(cleared); // Local state ကို clear
-            onFilterChange({}); // Parent (Table) ကို filter တွေ ရှင်းသွားပြီလို့ အသိပေး
-            // Dropdown ကိုပါ ပိတ်ချင်ရင် setShowFilterDropdown(false) ထည့်နိုင်ပါတယ်။
+            setFilters(cleared); 
+            onFilterChange({});
+            
         }
     }));
 
@@ -33,24 +33,20 @@ const TableFilterControls = forwardRef(({ dataColumns, onFilterChange }, ref) =>
     };
 
     const handleApplyFilters = () => {
-        // filter object ကို query string ပုံစံပြောင်းလဲပြီး parent ကို ပို့နိုင်ပါတယ်။
-        // ဒီနေရာမှာတော့ onFilterChange က filters object ကိုပဲ တိုက်ရိုက်လက်ခံထားပါတယ်။
-        // Table component ရဲ့ onFilter မှာ query string အဖြစ် ပြောင်းလဲပေးပါမယ်။
+        
         onFilterChange(filters); 
         setShowFilterDropdown(false);
     };
 
     const handleClearFilters = () => {
-        // ဒီ function က Internal Clear Button အတွက်ပါ။
-        // useImperativeHandle ထဲက clearFilters ကို ခေါ်လိုက်ရင်လည်း ရပါတယ်။
-        // ဒါမှမဟုတ် ဒီ logic ကိုပဲ clearFilters ထဲ ပြောင်းထည့်ပြီး ပြန်ခေါ်လို့ရပါတယ်။
+    
         const cleared = {};
         filterableColumns.forEach(col => {
             cleared[col.accessorKey] = '';
         });
         setFilters(cleared);
-        onFilterChange({}); // Notify parent with empty filters
-        // setShowFilterDropdown(false); // Clear လုပ်ပြီး Dropdown ပိတ်မယ်ဆိုရင်
+        onFilterChange({}); 
+     
     };
 
     return (
@@ -58,7 +54,7 @@ const TableFilterControls = forwardRef(({ dataColumns, onFilterChange }, ref) =>
             {!showFilterDropdown && (
                 <FaFilter
                     size={24}
-                    className="cursor-pointer text-gray-600 hover:text-blue-600"
+                    className="cursor-pointer text-blue-500 hover:text-blue-600"
                     onClick={() => setShowFilterDropdown(true)}
                 />
             )}
@@ -68,7 +64,7 @@ const TableFilterControls = forwardRef(({ dataColumns, onFilterChange }, ref) =>
                     <div className="flex justify-end mb-2">
                         <button
                             onClick={() => setShowFilterDropdown(false)}
-                            className="text-gray-500 hover:text-gray-700"
+                            className="text-red-500 hover:text-red-700"
                         >
                             <FaTimes size={20} />
                         </button>
@@ -120,6 +116,6 @@ const TableFilterControls = forwardRef(({ dataColumns, onFilterChange }, ref) =>
             )}
         </div>
     );
-}); // forwardRef ကို ဒီမှာ ပိတ်ရပါမယ်
+});
 
 export default TableFilterControls;
