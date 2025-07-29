@@ -66,29 +66,44 @@ const Table = () => {
     }, [fetchUsers]);
 
     
-    const columns = useMemo(() => {
-  
-        if (!columnsFromAPI) return [];
+   const columns = useMemo(() => {
+    if (!columnsFromAPI) return [];
 
-      
-        return columnsFromAPI.map((column) => {
-            if (column.accessorKey === 'name') {
-             
-                return {
-                    ...column, 
-                    cell: ({ row }) => ( 
-                        <TabNavlink
-                            row={row}
-                            value={row.original[column.accessorKey]}
-                        />
-                    ),
-                };
-            }
-         
-            return column;
-        });
-    }, [columnsFromAPI]); 
-   
+    return columnsFromAPI.map((column) => {
+        if (column.accessorKey === 'name') {
+            return {
+                ...column,
+                cell: ({ row }) => (
+                    <TabNavlink
+                        row={row}
+                        value={row.original[column.accessorKey]}
+                    />
+                ),
+            };
+        }
+
+       if (column.accessorKey === 'disabled') {
+    return {
+        ...column,
+        cell: ({ row }) => {
+            const isDisabled = row.original.disabled;
+            return (
+                <span
+                    className={`p-1 text-sm font-semibold  ${
+                        isDisabled ? 'bg-red-200 text-red-800' : 'bg-green-200 text-green-800'
+                    }`}
+                >
+                    {isDisabled ? 'Inactive' : 'Active'}
+                </span>
+            );
+        },
+    };
+}
+
+        return column;
+    });
+}, [columnsFromAPI]);
+
 
 
     const handleGlobalFilterChange = (filterText) => {

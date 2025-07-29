@@ -1,9 +1,13 @@
+import TabNavlink from "./userManagement/TabNavlink";
+
 function ExpandableComponent({ rowData, hiddenColumns, columnMeta }) {
   return (
     <div className="w-full rounded-md overflow-hidden font-semibold">
       {hiddenColumns.length > 0 &&
         hiddenColumns.map((accessorKey, index) => {
-          const colMeta = columnMeta.find((col) => col.accessorKey === accessorKey);
+          const colMeta = columnMeta.find(
+            (col) => col.accessorKey === accessorKey
+          );
           if (!colMeta) return null;
 
           return (
@@ -11,16 +15,32 @@ function ExpandableComponent({ rowData, hiddenColumns, columnMeta }) {
               key={index}
               className="bg-white h-16 flex flex-1 gap-2 py-1"
             >
+              {/* Label Column */}
               <div className="ml-2 border customized-rounded w-full basis-1/3 flex items-center justify-center">
-                <h3 className="text-center font-bold  text-green-700">
+                <h3 className="text-center font-bold text-green-700">
                   {colMeta.header}
                 </h3>
               </div>
+
+              {/* Value Column */}
               <div className="mr-2 border customized-rounded w-full basis-2/3 flex items-center justify-center text-smallHeader">
                 <div className="w-full pl-2 text-left break-all">
-                  <div className="flex items-center gap-2 font-semibold text-[#231F20E6]">
-                    {rowData[accessorKey]}
-                  </div>
+                 <div className="flex items-center gap-2 font-semibold text-[#231F20E6]">
+  {accessorKey === "disabled" ? (
+    rowData[accessorKey] ? (
+      <span className="bg-red-200 text-red-800 px-3 py-1 rounded-full">Inactive</span>
+    ) : (
+      <span className="bg-green-200 text-green-800 px-3 py-1 rounded-full">Active</span>
+    )
+  ) : accessorKey === "name" ? (
+    <TabNavlink
+      row={{ original: rowData }}
+      value={rowData[accessorKey]}
+    />
+  ) : (
+    rowData[accessorKey]
+  )}
+</div>
                 </div>
               </div>
             </div>
@@ -29,4 +49,5 @@ function ExpandableComponent({ rowData, hiddenColumns, columnMeta }) {
     </div>
   );
 }
+
 export default ExpandableComponent;
